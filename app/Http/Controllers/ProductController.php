@@ -2,13 +2,19 @@
 
 namespace AttendanceSystem\Http\Controllers;
 
-use AttendanceSystem\Image;
+
+use AttendanceSystem\Traits\FileRelationTrait;
+use AttendanceSystem\Traits\UploadFileTrait;
+use AttendanceSystem\ProductImage;
 use AttendanceSystem\Repositories\ProductRepository;
 use AttendanceSystem\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends BaseController
 {
+    use UploadFileTrait;
+    use FileRelationTrait;
+
     private $productRepository;
 
     public function __construct(ProductRepository $productRepository)
@@ -100,7 +106,20 @@ class ProductController extends BaseController
         }
 
         $data = $request->all();
+        $images = $request->file('images');
+
         $result = $product->fill($data)->save();
+
+        if(!empty($images)) {
+
+            $i = $this->multiple($images);
+
+            $product->main_image_id = $i[0];
+
+            $product->save();
+
+            $this->set_relation(ProductImage::class,'product_id', $i, $id);
+        }
 
         if($result) {
             return redirect()->route('product.edit', $product->id)->with(['success' => "Успешно сохранено"]);

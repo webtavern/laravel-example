@@ -20,4 +20,18 @@ class Product extends Model
         'standart_of_time',
         'main_image_id',
     ];
+
+    public function images()
+    {
+        return $this->belongsToMany('AttendanceSystem\Image', 'product_images');
+    }
+
+    public function image() {
+        $img = Image::findOrFail($this->main_image_id);
+
+        return $img->path;
+    }
+
+
+
 }

@@ -12,10 +12,11 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
+
                                 <table class="table">
                                     <thead class=" text-primary">
                                     <th>
-                                        ID
+                                        Image
                                     </th>
                                     <th>
                                         Title
@@ -43,16 +44,14 @@
                                     @foreach ($products as $product)
                                     <tr>
                                         <td>
-                                            {{$product->id}}
+                                            <img src="{{asset('storage/'.$product->image())}}" style="width: 320px; height: 240px" alt="main image"/>
+                                            <img src="/storage/app/public/uploads/R6SOtMTqTebdxcV8Ykqo72LCh0UIQwMmE6N6Nf5f.jpeg">
                                         </td>
                                         <td>
                                             <a href="{{ route('product.edit', $product->id) }}">{{$product->title}}</a>
                                         </td>
                                         <td>
                                             {{$product->description}}
-                                        </td>
-                                        <td>
-                                            {{$product->main_image_id}}
                                         </td>
                                         <td>
                                             {{$product->assembly_id}}
@@ -80,3 +79,4 @@
         </div>
     </div>
 @endsection
+
