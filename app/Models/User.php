@@ -1,6 +1,6 @@
 <?php
 
-namespace AttendanceSystem;
+namespace AttendanceSystem\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;

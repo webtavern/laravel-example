@@ -1,6 +1,6 @@
 <?php
 
-namespace AttendanceSystem;
+namespace AttendanceSystem\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,6 +15,6 @@ class ProductImage extends Model
 
     public function product()
     {
-        return $this->hasOne('AttendanceSystem\Product');
+        return $this->hasOne('AttendanceSystem\Models\Product');
     }
 }

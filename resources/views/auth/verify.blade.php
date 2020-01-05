@@ -1,4 +1,4 @@
-@extends('layouts.app', ['class' => 'off-canvas-sidebar', 'activePage' => 'home', 'title' => __('Material Dashboard')])
+@extends('layouts.app', ['class' => 'off-canvas-sidebar', 'activePage' => 'home', 'titlePage' => __('Verify')])
 
 @section('content')
 <div class="container" style="height: auto;">
@@ -16,9 +16,9 @@
                         {{ __('A fresh verification link has been sent to your email address.') }}
                     </div>
                 @endif
-                
+
                 {{ __('Before proceeding, please check your email for a verification link.') }}
-                
+
                 @if (Route::has('verification.resend'))
                     {{ __('If you did not receive the email') }}, <a href="{{ route('verification.resend') }}">{{ __('click here to request another') }}</a>
                 @endif

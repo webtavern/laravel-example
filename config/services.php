@@ -35,7 +35,7 @@ return [
     ],
 
     'stripe' => [
-        'model' => AttendanceSystem\User::class,
+        'model' => AttendanceSystem\Models\User::class,
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
         'webhook' => [

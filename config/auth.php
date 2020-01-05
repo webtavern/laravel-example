@@ -68,7 +68,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => AttendanceSystem\User::class,
+            'model' => AttendanceSystem\Models\User::class,
         ],
 
         // 'users' => [

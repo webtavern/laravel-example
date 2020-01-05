@@ -2,7 +2,7 @@
 
 namespace AttendanceSystem\Http\Controllers;
 
-use AttendanceSystem\User;
+use AttendanceSystem\Models\User;
 use AttendanceSystem\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Hash;
 
@@ -11,7 +11,7 @@ class UserController extends Controller
     /**
      * Display a listing of the users
      *
-     * @param  \AttendanceSystem\User  $model
+     * @param  \AttendanceSystem\Models\User  $model
      * @return \Illuminate\View\View
      */
     public function index(User $model)

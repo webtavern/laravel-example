@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Show the form for editing the profile.
      *

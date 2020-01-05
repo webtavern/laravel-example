@@ -8,7 +8,7 @@
 
 namespace AttendanceSystem\Repositories;
 
-use AttendanceSystem\Product;
+use AttendanceSystem\Models\Product;
 
 use Illuminate\Support\Collection;
 

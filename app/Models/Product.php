@@ -1,7 +1,8 @@
 <?php
 
-namespace AttendanceSystem;
+namespace AttendanceSystem\Models;
 
+use AttendanceSystem\Models\Image;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
@@ -23,7 +24,7 @@ class Product extends Model
 
     public function images()
     {
-        return $this->belongsToMany('AttendanceSystem\Image', 'product_images');
+        return $this->belongsToMany('AttendanceSystem\Models\Image', 'product_images');
     }
 
     public function image() {

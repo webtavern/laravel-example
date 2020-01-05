@@ -2,7 +2,7 @@
 
 namespace AttendanceSystem\Http\Controllers\Auth;
 
-use AttendanceSystem\User;
+use AttendanceSystem\Models\User;
 use AttendanceSystem\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;

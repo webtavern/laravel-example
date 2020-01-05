@@ -5,9 +5,9 @@ namespace AttendanceSystem\Http\Controllers;
 
 use AttendanceSystem\Traits\FileRelationTrait;
 use AttendanceSystem\Traits\UploadFileTrait;
-use AttendanceSystem\ProductImage;
+use AttendanceSystem\Models\ProductImage;
 use AttendanceSystem\Repositories\ProductRepository;
-use AttendanceSystem\Product;
+use AttendanceSystem\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends BaseController
@@ -20,6 +20,7 @@ class ProductController extends BaseController
     public function __construct(ProductRepository $productRepository)
     {
         $this->productRepository = $productRepository;
+        $this->middleware('auth');
     }
 
     /**

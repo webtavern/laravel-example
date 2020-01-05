@@ -2,7 +2,7 @@
 
 namespace AttendanceSystem\Http\Requests;
 
-use AttendanceSystem\User;
+use AttendanceSystem\Models\User;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 

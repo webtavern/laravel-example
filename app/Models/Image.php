@@ -1,6 +1,6 @@
 <?php
 
-namespace AttendanceSystem;
+namespace AttendanceSystem\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
