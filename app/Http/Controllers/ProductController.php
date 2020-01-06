@@ -19,8 +19,8 @@ class ProductController extends BaseController
 
     public function __construct(ProductRepository $productRepository)
     {
+        parent::__construct();
         $this->productRepository = $productRepository;
-        $this->middleware('auth');
     }
 
     /**
@@ -132,7 +132,7 @@ class ProductController extends BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \AttendanceSystem\Product  $product
+     * @param  \AttendanceSystem\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
     public function destroy(Product $product)

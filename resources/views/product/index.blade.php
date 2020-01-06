@@ -5,6 +5,11 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
+                    <a class="btn btn-primary" href="{{route('product.create')}}">Add product</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
                     <div class="card">
                         <div class="card-header card-header-primary">
                             <h4 class="card-title ">Product</h4>
@@ -15,37 +20,36 @@
 
                                 <table class="table">
                                     <thead class=" text-primary">
-                                    <th>
+                                    <tr>
                                         Image
-                                    </th>
-                                    <th>
+                                    </tr>
+                                    <tr>
                                         Title
-                                    </th>
-                                    <th>
+                                    </tr>
+                                    <tr>
                                         Description
-                                    </th>
-                                    <th>
+                                    </tr>
+                                    <tr>
                                         Main Image
-                                    </th>
-                                    <th>
+                                    </tr>
+                                    <tr>
                                         Assembly ID
-                                    </th>
-                                    <th>
+                                    </tr>
+                                    <tr>
                                         Standart of time
-                                    </th>
-                                    <th>
+                                    </tr>
+                                    <tr>
                                         Created
-                                    </th>
-                                    <th>
+                                    </tr>
+                                    <tr>
                                         Updated
-                                    </th>
+                                    </tr>
                                     </thead>
                                     <tbody>
                                     @foreach ($products as $product)
                                     <tr>
                                         <td>
-                                            <img src="{{asset('storage/'.$product->image())}}" style="width: 320px; height: 240px" alt="main image"/>
-                                            <img src="/storage/app/public/uploads/R6SOtMTqTebdxcV8Ykqo72LCh0UIQwMmE6N6Nf5f.jpeg">
+                                            <img src="{{asset('storage/'.$product->image())}}" style="width: 320px; height: 240px" alt="main_image"/>
                                         </td>
                                         <td>
                                             <a href="{{ route('product.edit', $product->id) }}">{{$product->title}}</a>

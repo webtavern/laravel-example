@@ -8,7 +8,7 @@
 namespace AttendanceSystem\Traits;
 
 
-use AttendanceSystem\Image;
+use AttendanceSystem\Models\Image;
 use Illuminate\Support\Facades\Auth;
 
 

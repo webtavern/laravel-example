@@ -174,6 +174,9 @@ return [
         // AttendanceSystem\Providers\BroadcastServiceProvider::class,
         AttendanceSystem\Providers\EventServiceProvider::class,
         AttendanceSystem\Providers\RouteServiceProvider::class,
+        AttendanceSystem\Providers\PermissionServiceProvider::class,
+        AttendanceSystem\Providers\RolesServiceProvider::class,
+
 
     ],
 
