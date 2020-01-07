@@ -1,4 +1,4 @@
-@extends('layouts.app', ['activePage' => 'index', 'titlePage' => __('Edit product')])
+@extends('layouts.app', ['activePage' => 'edit', 'titlePage' => __('Edit product')])
 
 @section('content')
     <div class="content">
@@ -103,6 +103,18 @@
                                             <input class="form-control{{ $errors->has('standart_of_time') ? ' is-invalid' : '' }}" name="standart_of_time" id="input-standart_of_time" type="text" placeholder="{{ __('Enter the time(h)') }}" value="{{ old('standart_of_time', $product->standart_of_time) }}" required="true" aria-required="true"/>
                                             @if ($errors->has('standart_of_time'))
                                                 <span id="title-error" class="error text-danger" for="input-title">{{ $errors->first('standart_of_time') }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <label class="col-sm-2 col-form-label">{{ __('Is assembly?') }}</label>
+                                    <div class="col-sm-7">
+                                        <div class="form-group{{ $errors->has('is_assembly') ? ' has-danger' : '' }}">
+                                            <input class="form-control{{ $errors->has('is_assembly') ? ' is-invalid' : '' }}" name="is_assembly" id="input-is_assembly" type="checkbox" value="1" style="width: 36px" {{ ($product->is_assembly == 1) ? 'checked' : '' }}/>
+                                            @if ($errors->has('is_assembly'))
+                                                <span id="title-error" class="error text-danger" for="is_assembly">{{ $errors->first('is_assembly') }}</span>
                                             @endif
                                         </div>
                                     </div>

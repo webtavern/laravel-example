@@ -17,9 +17,9 @@ class CreateProductTable extends Migration
             $table->bigIncrements('id');
             $table->char('title', 50);
             $table->longText('description');
-            $table->bigInteger('main_image_id');
             $table->integer('assembly_id')->nullable();
-            $table->time('standart_of_time');
+            $table->float('standart_of_time');
+            $table->tinyInteger('is_assembly')->default(0);
             $table->timestamps();
         });
     }

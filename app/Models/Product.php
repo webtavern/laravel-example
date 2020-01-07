@@ -19,18 +19,29 @@ class Product extends Model
         'description',
         'assembly_id',
         'standart_of_time',
-        'main_image_id',
     ];
 
     public function images()
     {
-        return $this->belongsToMany('AttendanceSystem\Models\Image', 'product_images');
+        return $this->belongsToMany(Image::class, 'product_images');
     }
 
     public function image() {
-        $img = Image::findOrFail($this->main_image_id);
 
-        return $img->path;
+        return $this->images()->first();
+
+    }
+
+    public function getThumb() {
+
+        $obj = $this->images()->first();
+
+        if($obj) {
+            $name = $obj->name;
+            return 'uploads/thumbs/'.$name;
+        }
+
+        return 'blank';
     }
 
 

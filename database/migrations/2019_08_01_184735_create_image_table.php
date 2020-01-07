@@ -15,8 +15,9 @@ class CreateImageTable extends Migration
     {
         Schema::create('image', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('name', 100);
             $table->string('path', 100);
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
         });

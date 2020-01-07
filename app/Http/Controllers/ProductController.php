@@ -2,18 +2,14 @@
 
 namespace AttendanceSystem\Http\Controllers;
 
-
-use AttendanceSystem\Traits\FileRelationTrait;
-use AttendanceSystem\Traits\UploadFileTrait;
-use AttendanceSystem\Models\ProductImage;
+use AttendanceSystem\Traits\ImageUpload;
 use AttendanceSystem\Repositories\ProductRepository;
 use AttendanceSystem\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends BaseController
 {
-    use UploadFileTrait;
-    use FileRelationTrait;
+    use ImageUpload;
 
     private $productRepository;
 
@@ -44,9 +40,9 @@ class ProductController extends BaseController
      */
     public function create()
     {
+       $assemblyList = $this->productRepository->getAssemblyList();
 
-
-       // return view('product.create', )
+       return view('product.create', ['assemblyList' => $assemblyList]);
     }
 
     /**
@@ -57,19 +53,44 @@ class ProductController extends BaseController
      */
     public function store(Request $request)
     {
-        //
+        $product = new Product();
+
+        $data = $request->all();
+        $images = $request->file('images');
+
+        if(!empty($images)) {
+
+            $arr = $this->processingImages($images, 'product');
+
+            $product->fill($data)->save();
+
+            $created_product = Product::find($product->id);
+
+            $result = $created_product->images()->saveMany($arr);
+
+        } else {
+
+            $result = $product->fill($data)->save();
+
+        }
+
+        if($result) {
+            return redirect()->route('product.index')->with(['success' => "Успешно сохранено"]);
+        } else {
+            return back()->withErrors(['msg' => "Ошибка сохранения"])->withInput();
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \AttendanceSystem\Product  $product
+     * @param  \AttendanceSystem\Models\Product  $product
      * @param $id
      * @return \Illuminate\Http\Response
      */
     public function show(Product $product, $id)
     {
-
+        //
     }
 
     /**
@@ -85,8 +106,6 @@ class ProductController extends BaseController
         $product = $this->productRepository->getById($id);
 
         $assemblyList = $this->productRepository->getAssemblyList();
-
-//        dd($assemblyList);
 
         return view('product.edit', ['product' => $product, 'assemblyList' => $assemblyList]);
     }
@@ -109,17 +128,20 @@ class ProductController extends BaseController
         $data = $request->all();
         $images = $request->file('images');
 
-        $result = $product->fill($data)->save();
-
         if(!empty($images)) {
 
-            $i = $this->multiple($images);
+            $arr = $this->processingImages($images, 'product');
 
-            $product->main_image_id = $i[0];
+            $product->fill($data)->save();
 
-            $product->save();
+            $created_product = Product::find($product->id);
 
-            $this->set_relation(ProductImage::class,'product_id', $i, $id);
+            $result = $created_product->images()->saveMany($arr);
+
+        } else {
+
+            $result = $product->fill($data)->save();
+
         }
 
         if($result) {
@@ -130,13 +152,14 @@ class ProductController extends BaseController
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \AttendanceSystem\Models\Product  $product
-     * @return \Illuminate\Http\Response
+     * @param Product $product
+     * @return mixed
+     * @throws \Exception
      */
     public function destroy(Product $product)
     {
-        //
+        $product->images()->delete();
+        $product->delete();
+        return redirect()->route('product.index')->withStatus(__('Product successfully deleted.'));
     }
 }

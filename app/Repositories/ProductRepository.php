@@ -49,22 +49,18 @@ class ProductRepository {
     /**
      * Get product list for change parent assembly.
      *
-     * @return Collection
+     * @return array
      */
 
     public function getAssemblyList() {
 
-        $product = $this->model->select(['title', 'assembly_id'])->get();
+        $product = $this->model->select(['id','title'])->where(['is_assembly' => 1])->get();
 
-        $assembly_list[1] = [];
+        $assembly_list = [];
 
         foreach ($product as $p) {
 
-            if($p->assembly_id != null || $p->assembly_id) {
-                $n = $this->model->select(['title'])->where(['id' => $p->assembly_id])->first();
-                $assembly_list[$p->assembly_id] = $n->title;
-            }
-
+                $assembly_list[$p->id] = $p->title;
         }
 
         return $assembly_list;
