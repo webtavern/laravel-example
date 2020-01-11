@@ -72,6 +72,15 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::resource('product', 'ProductController');
 
+Route::group(['middleware' => 'role:admin'], function () {
+
+    Route::resource('role', 'RoleController');
+    Route::resource('permission', 'PermissionController');
+
+});
+
+
+
 
 
 

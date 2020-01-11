@@ -1,4 +1,4 @@
-@extends('layouts.app', ['activePage' => 'product.index', 'titlePage' => __('Product list')])
+@extends('layouts.app', ['activePage' => 'role.index', 'titlePage' => __('Roles list')])
 
 @section('content')
     <div class="content">
@@ -7,8 +7,8 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header card-header-primary">
-                            <h4 class="card-title ">Product</h4>
-                            <p class="card-category">List of Product</p>
+                            <h4 class="card-title ">Roles</h4>
+                            <p class="card-category">List of Roles</p>
                         </div>
                         <div class="card-body">
                             @if (session('status'))
@@ -25,54 +25,43 @@
                             @endif
                             <div class="row">
                                 <div class="col-12 text-right">
-                                    <a href="{{ route('product.create') }}" class="btn btn-sm btn-primary">{{ __('Add product') }}</a>
+                                    <a href="{{ route('role.create') }}" class="btn btn-sm btn-primary">{{ __('Add role') }}</a>
                                 </div>
                             </div>
                             <div class="table-responsive">
 
                                 <table class="table">
                                     <thead class=" text-primary">
-                                        <th>Image</th>
-                                        <th>Title</th>
-                                        <th>Description</th>
-                                        <th>Assembly ID</th>
-                                        <th>Standart of time(h)</th>
-                                        <th>Created</th>
-                                        <th>Updated</th>
+                                        <th>Name</th>
+                                        <th>Slug</th>
+                                        <th>Permissions</th>
                                         <th class="text-right">{{ __('Actions') }}</th>
                                     </thead>
                                     <tbody>
-                                    @foreach ($products as $product)
+                                    @foreach ($roles as $role)
                                     <tr>
                                         <td>
-                                            <img src="{{asset('storage/'.$product->getThumb())}}" style="width: 320px; height: 240px" alt="main_image"/>
+                                            {{$role->name}}
                                         </td>
                                         <td>
-                                            <a href="{{ route('product.edit', $product->id) }}">{{$product->title}}</a>
+                                            {{$role->slug}}
                                         </td>
                                         <td>
-                                            {{$product->description}}
+                                            @if($role->permissions)
+                                                @foreach($role->permissions as $permission)
+                                                    {{$permission->name.','}}
+                                                @endforeach
+                                            @endif
                                         </td>
-                                        <td>
-                                            {{$product->assembly_id}}
-                                        </td>
-                                        <td>
-                                            {{$product->standart_of_time}}
-                                        </td>
-                                        <td>
-                                            {{$product->created_at}}
-                                        </td>
-                                        <td>
-                                            {{$product->updated_at}}
-                                        </td>
+
                                         <td class="td-actions text-right">
 
-                                            <form action="{{ route('product.destroy', $product->id) }}" method="post">
+                                            <form action="{{ route('role.destroy', $role->id) }}" method="post">
                                                 @csrf
                                                 @method('delete')
 
                                                 <a rel="tooltip" class="btn btn-success btn-link"
-                                                   href="{{ route('product.edit', $product->id) }}" data-original-title=""
+                                                   href="{{ route('role.edit', $role->id) }}" data-original-title=""
                                                    title="">
                                                     <i class="material-icons">edit</i>
                                                     <div class="ripple-container"></div>

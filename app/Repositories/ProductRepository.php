@@ -12,7 +12,7 @@ use AttendanceSystem\Models\Product;
 
 use Illuminate\Support\Collection;
 
-class ProductRepository {
+class ProductRepository extends BaseRepository {
 
 
     /**
@@ -24,26 +24,6 @@ class ProductRepository {
     public function __construct(Product $product)
     {
         $this->model = $product;
-    }
-
-    /**
-     * Get product collection.
-     *
-     * @return Collection
-     */
-    public function index()
-    {
-        return $this->model->get();
-    }
-
-    /**
-     * Get product.
-     * @param $id
-     * @return Product
-     */
-
-    public function getById($id) {
-        return $this->model->findOrFail($id);
     }
 
     /**

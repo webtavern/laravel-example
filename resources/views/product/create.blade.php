@@ -1,4 +1,4 @@
-@extends('layouts.app', ['activePage' => 'create', 'titlePage' => __('Create product')])
+@extends('layouts.app', ['activePage' => 'product.create', 'titlePage' => __('Create product')])
 
 @section('content')
     <div class="content">
@@ -128,7 +128,7 @@
 
                             </div>
                             <div class="card-footer ml-auto mr-auto">
-                                <button type="submit" class="btn btn-primary">{{ __('Confirm changes') }}</button>
+                                <button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
                             </div>
                         </div>
                     </form>

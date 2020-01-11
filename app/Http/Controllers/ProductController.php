@@ -152,12 +152,12 @@ class ProductController extends BaseController
     }
 
     /**
-     * @param Product $product
+     * @param $id
      * @return mixed
-     * @throws \Exception
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
+        $product= Product::find($id);
         $product->images()->delete();
         $product->delete();
         return redirect()->route('product.index')->withStatus(__('Product successfully deleted.'));

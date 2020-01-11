@@ -140,6 +140,13 @@
         <!-- Material Dashboard DEMO methods, don't include it in your project! -->
         <script src="{{ asset('material') }}/demo/demo.js"></script>
         <script src="{{ asset('material') }}/js/settings.js"></script>
+        <script>
+
+                $('.sidebar-wrapper li.nav-item.active').children('a.nav-link').removeClass('collapsed').attr('aria-expanded', 'true');
+                $('.sidebar-wrapper li.nav-item.active').children('div.collapse').addClass('show');
+
+        </script>
         @stack('js')
+
     </body>
 </html>

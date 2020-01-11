@@ -9,8 +9,9 @@
 namespace AttendanceSystem\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
-abstract class BaseRepository {
+class BaseRepository {
 
     /**
      * The Model instance.
@@ -20,24 +21,32 @@ abstract class BaseRepository {
     protected $model;
 
     /**
-     * Get number of records.
+     * Get model collection.
      *
-     * @return array
+     * @return Collection
      */
-    public function getNumber()
+    public function index()
     {
-        $total = $this->model->count();
-
-        $new = $this->model->whereSeen(0)->count();
-
-        return compact('total', 'new');
+        return $this->model->get();
     }
 
+//    /**
+//     * Get number of records.
+//     *
+//     * @return array
+//     */
+//    public function getNumber()
+//    {
+//        $total = $this->model->count();
+//
+//        $new = $this->model->whereSeen(0)->count();
+//
+//        return compact('total', 'new');
+//    }
+
     /**
-     * Destroy a model.
-     *
-     * @param  int $id
-     * @return void
+     * @param $id
+     * @throws \Exception
      */
     public function destroy($id)
     {
