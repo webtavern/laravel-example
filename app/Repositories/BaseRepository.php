@@ -30,20 +30,6 @@ class BaseRepository {
         return $this->model->get();
     }
 
-//    /**
-//     * Get number of records.
-//     *
-//     * @return array
-//     */
-//    public function getNumber()
-//    {
-//        $total = $this->model->count();
-//
-//        $new = $this->model->whereSeen(0)->count();
-//
-//        return compact('total', 'new');
-//    }
-
     /**
      * @param $id
      * @throws \Exception

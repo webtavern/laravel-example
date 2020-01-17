@@ -3,6 +3,7 @@
 @section('content')
   <div class="content">
     <div class="container-fluid">
+
       <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -38,7 +39,10 @@
                         {{ __('Email') }}
                       </th>
                       <th>
-                        {{ __('Creation date') }}
+                          {{ __('Roles') }}
+                      </th>
+                      <th>
+                          {{ __('Permissions') }}
                       </th>
                       <th class="text-right">
                         {{ __('Actions') }}
@@ -54,14 +58,26 @@
                             {{ $user->email }}
                           </td>
                           <td>
-                            {{ $user->created_at->format('Y-m-d') }}
+                              @if($user->roles)
+                                  @foreach($user->roles as $role)
+                                      {{$role->name.','}}
+                                  @endforeach
+                              @endif
                           </td>
+                          <td>
+                              @if($user->permissions)
+                                  @foreach($user->permissions as $permission)
+                                      {{$permission->name.','}}
+                                  @endforeach
+                              @endif
+                          </td>
+
                           <td class="td-actions text-right">
                             @if ($user->id != auth()->id())
                               <form action="{{ route('user.destroy', $user) }}" method="post">
                                   @csrf
                                   @method('delete')
-                              
+
                                   <a rel="tooltip" class="btn btn-success btn-link" href="{{ route('user.edit', $user) }}" data-original-title="" title="">
                                     <i class="material-icons">edit</i>
                                     <div class="ripple-container"></div>

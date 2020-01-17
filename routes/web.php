@@ -62,21 +62,20 @@ Route::group(['middleware' => 'auth'], function () {
 	})->name('upgrade');
 });
 
-Route::group(['middleware' => 'auth'], function () {
+Route::middleware(['auth', 'check.user.id'])->group(function () {
 	Route::resource('user', 'UserController', ['except' => ['show']]);
 	Route::get('profile', ['as' => 'profile.edit', 'uses' => 'ProfileController@edit']);
 	Route::put('profile', ['as' => 'profile.update', 'uses' => 'ProfileController@update']);
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'ProfileController@password']);
-
 });
 
-Route::resource('product', 'ProductController');
-
-Route::group(['middleware' => 'role:admin'], function () {
-
+Route::middleware(['role:admin'])->group(function () {
     Route::resource('role', 'RoleController');
     Route::resource('permission', 'PermissionController');
+});
 
+Route::middleware(['check.routes'])->group(function () {
+    Route::resource('product', 'ProductController');
 });
 
 

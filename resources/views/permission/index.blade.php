@@ -34,6 +34,8 @@
                                     <thead class=" text-primary">
                                         <th>Name</th>
                                         <th>Slug</th>
+                                        <th>Routes</th>
+                                        <th>Roles</th>
 
                                         <th class="text-right">{{ __('Actions') }}</th>
                                     </thead>
@@ -45,6 +47,16 @@
                                         </td>
                                         <td>
                                             {{$permission->slug}}
+                                        </td>
+                                        <td>
+                                            {{$permission->routes}}
+                                        </td>
+                                        <td>
+                                            @if($permission->roles)
+                                                @foreach($permission->roles as $role)
+                                                    {{$role->name.','}}
+                                                @endforeach
+                                            @endif
                                         </td>
                                         <td class="td-actions text-right">
 

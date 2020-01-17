@@ -19,6 +19,7 @@ class Product extends Model
         'description',
         'assembly_id',
         'standart_of_time',
+        'is_assembly'
     ];
 
     public function images()
@@ -41,7 +42,7 @@ class Product extends Model
             return 'uploads/thumbs/'.$name;
         }
 
-        return 'blank';
+        return 'images/no_image.jpg';
     }
 
 

@@ -2,21 +2,35 @@
 
 namespace AttendanceSystem\Http\Controllers;
 
+
+use AttendanceSystem\Models\Role;
 use AttendanceSystem\Models\User;
 use AttendanceSystem\Http\Requests\UserRequest;
-use Illuminate\Support\Facades\Hash;
+use AttendanceSystem\Repositories\UserRepository;
+
 
 class UserController extends Controller
 {
+    private $userRepository;
+
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
     /**
      * Display a listing of the users
      *
-     * @param  \AttendanceSystem\Models\User  $model
+     * @param  UserRepository $userRepository
      * @return \Illuminate\View\View
      */
-    public function index(User $model)
+    public function index(UserRepository $userRepository)
     {
-        return view('users.index', ['users' => $model->paginate(15)]);
+        $routes = app()->routes->getRoutes();
+
+        $users = $userRepository->getUsersWithRolesAndPermissions();
+
+        return view('users.index', ['users' => $users, 'routes' => $routes]);
     }
 
     /**
@@ -26,19 +40,21 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        $role_list = Role::all();
+
+        return view('users.create', ['roles' => $role_list]);
     }
 
     /**
      * Store a newly created user in storage
      *
      * @param  \AttendanceSystem\Http\Requests\UserRequest  $request
-     * @param  \AttendanceSystem\User  $model
+     * @param  \AttendanceSystem\Models\User  $user
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(UserRequest $request, User $model)
+    public function store(UserRequest $request, User $user)
     {
-        $model->create($request->merge(['password' => Hash::make($request->get('password'))])->all());
+        $this->userRepository->store($request, $user);
 
         return redirect()->route('user.index')->withStatus(__('User successfully created.'));
     }
@@ -46,27 +62,28 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified user
      *
-     * @param  \AttendanceSystem\User  $user
+     * @param  $id
      * @return \Illuminate\View\View
      */
-    public function edit(User $user)
+    public function edit($id)
     {
-        return view('users.edit', compact('user'));
+        $user = $this->userRepository->getById($id);
+
+        $role_list = Role::all();
+
+        return view('users.edit', ['user' => $user, 'roles' => $role_list]);
     }
 
     /**
      * Update the specified user in storage
      *
      * @param  \AttendanceSystem\Http\Requests\UserRequest  $request
-     * @param  \AttendanceSystem\User  $user
+     * @param  \AttendanceSystem\Models\User  $user
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(UserRequest $request, User  $user)
+    public function update(UserRequest $request, User $user)
     {
-        $user->update(
-            $request->merge(['password' => Hash::make($request->get('password'))])
-                ->except([$request->get('password') ? '' : 'password']
-        ));
+        $this->userRepository->update($request, $user);
 
         return redirect()->route('user.index')->withStatus(__('User successfully updated.'));
     }
@@ -74,10 +91,10 @@ class UserController extends Controller
     /**
      * Remove the specified user from storage
      *
-     * @param  \AttendanceSystem\User  $user
+     * @param  \AttendanceSystem\Models\User  $user
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(User  $user)
+    public function destroy(User $user)
     {
         $user->delete();
 

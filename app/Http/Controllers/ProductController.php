@@ -2,14 +2,14 @@
 
 namespace AttendanceSystem\Http\Controllers;
 
-use AttendanceSystem\Traits\ImageUpload;
+use AttendanceSystem\Http\Requests\ProductRequest;
+
 use AttendanceSystem\Repositories\ProductRepository;
 use AttendanceSystem\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends BaseController
 {
-    use ImageUpload;
 
     private $productRepository;
 
@@ -48,36 +48,18 @@ class ProductController extends BaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  ProductRequest  $request
+     * @param Product $product
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request, Product $product)
     {
-        $product = new Product();
-
-        $data = $request->all();
-        $images = $request->file('images');
-
-        if(!empty($images)) {
-
-            $arr = $this->processingImages($images, 'product');
-
-            $product->fill($data)->save();
-
-            $created_product = Product::find($product->id);
-
-            $result = $created_product->images()->saveMany($arr);
-
-        } else {
-
-            $result = $product->fill($data)->save();
-
-        }
+        $result = $this->productRepository->store($request, $product);
 
         if($result) {
-            return redirect()->route('product.index')->with(['success' => "Успешно сохранено"]);
+            return redirect()->route('product.index')->with(['success' => "Product successfully saved."]);
         } else {
-            return back()->withErrors(['msg' => "Ошибка сохранения"])->withInput();
+            return back()->withErrors(['msg' => "Saving error"])->withInput();
         }
     }
 
@@ -119,35 +101,18 @@ class ProductController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        $product = Product::find($id);
+        $product = $this->productRepository->getById($id);
 
         if(empty($product)) {
-            return back()->withErrors(['msg' => "Запись id =[{$id}] не найдена"])->withInput();
+            return back()->withErrors(['msg' => "Record id =[{$id}] not found"])->withInput();
         }
 
-        $data = $request->all();
-        $images = $request->file('images');
-
-        if(!empty($images)) {
-
-            $arr = $this->processingImages($images, 'product');
-
-            $product->fill($data)->save();
-
-            $created_product = Product::find($product->id);
-
-            $result = $created_product->images()->saveMany($arr);
-
-        } else {
-
-            $result = $product->fill($data)->save();
-
-        }
+        $result = $this->productRepository->update($request, $product);
 
         if($result) {
-            return redirect()->route('product.edit', $product->id)->with(['success' => "Успешно сохранено"]);
+            return redirect()->route('product.edit', $product->id)->with(['success' => "Product successfully saved."]);
         } else {
-            return back()->withErrors(['msg' => "Ошибка сохранения"])->withInput();
+            return back()->withErrors(['msg' => "Saving error"])->withInput();
         }
     }
 
@@ -155,11 +120,21 @@ class ProductController extends BaseController
      * @param $id
      * @return mixed
      */
+
     public function destroy($id)
     {
-        $product= Product::find($id);
-        $product->images()->delete();
-        $product->delete();
-        return redirect()->route('product.index')->withStatus(__('Product successfully deleted.'));
+        $product = $this->productRepository->getById($id);
+
+        if(empty($product)) {
+            return back()->withErrors(['msg' => "Record id =[{$id}] not found"])->withInput();
+        }
+
+        $result = $this->productRepository->deleteWithImages($product);
+
+        if($result) {
+            return redirect()->route('product.index')->withStatus(__('Product successfully deleted.'));
+        } else {
+            return back()->withErrors(['msg' => "Saving error"])->withInput();
+        }
     }
 }

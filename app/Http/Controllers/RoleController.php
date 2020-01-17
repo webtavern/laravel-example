@@ -2,7 +2,8 @@
 
 namespace AttendanceSystem\Http\Controllers;
 
-use AttendanceSystem\Models\Product;
+use AttendanceSystem\Http\Requests\RoleRequest;
+use AttendanceSystem\Models\Permission;
 use AttendanceSystem\Models\Role;
 use AttendanceSystem\Repositories\RoleRepository;
 use Illuminate\Http\Request;
@@ -24,9 +25,9 @@ class RoleController extends BaseController
      */
     public function index()
     {
-        $roles = $this->roleRepository->index();
+        $roles = $this->roleRepository->getRoleWithPermission();
 
-        return view('role.index', compact('roles'));
+        return view('role.index', ['roles' => $roles]);
     }
 
     /**
@@ -36,20 +37,21 @@ class RoleController extends BaseController
      */
     public function create()
     {
-        return view('role.create');
+        $permission_list = Permission::all();
+
+        return view('role.create', ['permissions' => $permission_list]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  RoleRequest  $request
+     * @param Role $role
+     * @return mixed
      */
-    public function store(Request $request)
+    public function store(RoleRequest $request, Role $role)
     {
-        $role = new Role();
-        $data = $request->all();
-        $result = $role->fill($data)->save();
+        $result = $this->roleRepository->store($request, $role);
 
         if($result) {
             return redirect()->route('role.index')->with(['success' => "Успешно сохранено"]);
@@ -85,11 +87,11 @@ class RoleController extends BaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  RoleRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(RoleRequest $request, $id)
     {
         $role = Role::find($id);
 
@@ -97,9 +99,7 @@ class RoleController extends BaseController
             return back()->withErrors(['msg' => "Запись id =[{$id}] не найдена"])->withInput();
         }
 
-        $data = $request->all();
-
-        $result = $role->fill($data)->save();
+        $result = $this->roleRepository->update($request, $role);
 
         if($result) {
             return redirect()->route('role.edit', $role->id)->with(['success' => "Успешно сохранено"]);
@@ -116,10 +116,22 @@ class RoleController extends BaseController
      */
     public function destroy($id)
     {
-        $role = Role::find($id);
 
-        $role->delete();
+        if($id != 1) {
 
-        return redirect()->route('role.index')->withStatus(__('Role successfully deleted.'));
+            $role = Role::find($id);
+
+            $role->delete();
+
+            return redirect()->route('role.index')->withStatus(__('Role successfully deleted.'));
+
+        } else {
+
+            return redirect()->route('role.index')->withStatus(__('This role cannot be deleted.'));
+
+        }
+
+
+
     }
 }

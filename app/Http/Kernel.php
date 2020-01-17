@@ -2,6 +2,8 @@
 
 namespace AttendanceSystem\Http;
 
+use AttendanceSystem\Http\Middleware\RouteMiddleware;
+use AttendanceSystem\Http\Middleware\UserIdMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -60,7 +62,9 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'role'  =>  \AttendanceSystem\Http\Middleware\RoleMiddleware::class, // our role middleware
+        'role'  =>  \AttendanceSystem\Http\Middleware\RoleMiddleware::class,
+        'check.user.id' => UserIdMiddleware::class,
+        'check.routes' => RouteMiddleware::class,
     ];
 
     /**

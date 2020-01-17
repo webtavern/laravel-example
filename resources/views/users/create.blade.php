@@ -61,6 +61,22 @@
                     </div>
                   </div>
                 </div>
+                  <div class="row">
+                      <label class="col-sm-2 col-form-label">{{ __('Roles') }}</label>
+                      <div class="col-sm-7">
+                          <div class="form-group{{ $errors->has('roles') ? ' has-danger' : '' }}">
+                              @foreach($roles as $role)
+                                  <div>
+                                      <input class="{{ $errors->has('roles') ? ' is-invalid' : '' }}" name="roles[]" value="{{$role->id}}" type="checkbox"/><p style="display: inline">{{$role->name}}</p>
+                                  </div>
+                              @endforeach
+                              @if ($errors->has('roles'))
+                                  <span id="name-error" class="error text-danger">{{ $errors->first('roles') }}</span>
+                              @endif
+                          </div>
+                      </div>
+                  </div>
+
               </div>
               <div class="card-footer ml-auto mr-auto">
                 <button type="submit" class="btn btn-primary">{{ __('Add User') }}</button>
