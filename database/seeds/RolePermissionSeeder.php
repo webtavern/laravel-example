@@ -23,17 +23,17 @@ class RolePermissionSeeder extends Seeder
         $processingTasks_id = Permission::where('slug','processing-tasks')->first()->id;
 
 
-        DB::table('roles_permissions')->insert([
+        DB::table('role_permission')->insert([
             'role_id' => $admin_id,
             'permission_id' => $all_id,
         ]);
 
-        DB::table('roles_permissions')->insert([
+        DB::table('role_permission')->insert([
             'role_id' => $master_id,
             'permission_id' => $createTasks_id,
         ]);
 
-        DB::table('roles_permissions')->insert([
+        DB::table('role_permission')->insert([
             'role_id' => $worker_id,
             'permission_id' => $processingTasks_id,
         ]);

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Permission extends Model
 {
-    protected $table = 'permissions';
+    protected $table = 'permission';
 
     protected $fillable = [
         'name',
@@ -16,7 +16,7 @@ class Permission extends Model
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class,'roles_permissions');
+        return $this->belongsToMany(Role::class,'role_permission');
     }
 
     public function checkRoute($route) {

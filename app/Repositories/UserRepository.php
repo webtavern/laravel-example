@@ -80,6 +80,7 @@ class UserRepository extends BaseRepository
             $this->relationsProcessing($request, $user, 'update');
         } else {
             $user->roles()->detach();
+            $user->permissions()->detach();
         }
 
     }
