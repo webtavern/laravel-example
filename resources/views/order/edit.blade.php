@@ -5,9 +5,9 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <form method="post" action="{{ route('order.store') }}" autocomplete="off" class="form-horizontal">
+                    <form method="post" action="{{ route('order.update', $order->id) }}" autocomplete="off" class="form-horizontal">
                         @csrf
-                        @method('post')
+                        @method('patch')
 
                         <div class="card ">
                             <div class="card-header card-header-primary">
@@ -90,6 +90,22 @@
                                             @endforeach
                                             @if ($errors->has('workers'))
                                                 <span id="name-error" class="error text-danger">{{ $errors->first('workers') }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <label class="col-sm-2 col-form-label">{{ __('Closed') }}</label>
+                                    <div class="col-sm-7">
+                                        <div class="form-group{{ $errors->has('closed') ? ' has-danger' : '' }}">
+                                            @foreach($workers as $worker)
+                                                <div>
+                                                    <input class="{{ $errors->has('closed') ? ' is-invalid' : '' }}" name="closed" value="1" type="checkbox" {{($order->closed_at) ? 'checked' : ''}}/><p style="display: inline">Closed</p>
+                                                </div>
+                                            @endforeach
+                                            @if ($errors->has('closed'))
+                                                <span id="name-error" class="error text-danger">{{ $errors->first('closed') }}</span>
                                             @endif
                                         </div>
                                     </div>

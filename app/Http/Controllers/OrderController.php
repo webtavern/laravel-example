@@ -101,23 +101,31 @@ class OrderController extends BaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  OrderRequest  $request
+     * @param  Order $order
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(OrderRequest $request, Order $order)
     {
-        //
+        $result = $this->orderRepository->update($request, $order);
+
+        if($result) {
+            return redirect()->route('order.index')->with(['success' => "Успешно сохранено"]);
+        } else {
+            return back()->withErrors(['msg' => "Ошибка сохранения"])->withInput();
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  Order $order
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Order $order)
     {
-        //
+        $order->delete();
+
+        return redirect()->route('order.index')->withStatus(__('Order successfully deleted.'));
     }
 }
