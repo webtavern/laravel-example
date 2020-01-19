@@ -141,8 +141,6 @@
                     </ul>
                 </div>
             </li>
-            @endrole
-
 
             <li class="nav-item{{ $activePage == 'table' ? ' active' : '' }}">
                 <a class="nav-link" href="{{ route('table') }}">
@@ -187,6 +185,8 @@
                     <p>{{ __('Upgrade to PRO') }}</p>
                 </a>
             </li>
+
+            @endrole
         </ul>
     </div>
 </div>
