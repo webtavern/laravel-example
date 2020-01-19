@@ -76,6 +76,7 @@ Route::middleware(['role:admin'])->group(function () {
 
 Route::middleware(['check.routes'])->group(function () {
     Route::resource('product', 'ProductController');
+    Route::resource('order', 'OrderController');
 });
 
 

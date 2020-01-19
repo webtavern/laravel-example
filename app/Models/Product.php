@@ -22,19 +22,19 @@ class Product extends Model
         'is_assembly'
     ];
 
-    public function images()
-    {
+    public function orders() {
+        return$this->hasMany('AttendanceSystem\Models\Order');
+    }
+
+    public function images() {
         return $this->belongsToMany(Image::class, 'product_images');
     }
 
     public function image() {
-
         return $this->images()->first();
-
     }
 
     public function getThumb() {
-
         $obj = $this->images()->first();
 
         if($obj) {

@@ -67,7 +67,7 @@
                           <div class="form-group{{ $errors->has('roles') ? ' has-danger' : '' }}">
                               @foreach($roles as $role)
                                       <div>
-                                          <input class="{{ $errors->has('roles') ? ' is-invalid' : '' }}" name="roles[]" value="{{$role->id}}" type="checkbox" {{($user->checkRole($role->name)) ? 'checked' : ''}}/><p style="display: inline">{{$role->name}}</p>
+                                          <input class="{{ $errors->has('roles') ? ' is-invalid' : '' }}" name="roles[]" value="{{$role->id}}" type="checkbox" {{($user->hasRole($role->slug)) ? 'checked' : ''}}/><p style="display: inline">{{$role->name}}</p>
                                       </div>
                               @endforeach
                               @if ($errors->has('roles'))

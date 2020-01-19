@@ -1,4 +1,4 @@
-@extends('layouts.app', ['activePage' => 'product.index', 'titlePage' => __('Product list')])
+@extends('layouts.app', ['activePage' => 'order.index', 'titlePage' => __('Orders list')])
 
 @section('content')
     <div class="content">
@@ -7,8 +7,8 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header card-header-primary">
-                            <h4 class="card-title ">Product</h4>
-                            <p class="card-category">List of Product</p>
+                            <h4 class="card-title ">Orders</h4>
+                            <p class="card-category">List of Orders</p>
                         </div>
                         <div class="card-body">
                             @if (session('status'))
@@ -23,60 +23,53 @@
                                     </div>
                                 </div>
                             @endif
-                                @if(session('success'))
-                                    <div class="row justify-content-center">
-                                        <div class="col-md-11">
-                                            <div class="alert alert-success" role="alert">
-                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                    <span aria-hidden="true">x</span>
-                                                </button>
-                                                {{session()->get('success')}}
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
                             <div class="row">
                                 <div class="col-12 text-right">
-                                    <a href="{{ route('product.create') }}" class="btn btn-sm btn-primary">{{ __('Add product') }}</a>
+                                    <a href="{{ route('order.create') }}" class="btn btn-sm btn-primary">{{ __('Add order') }}</a>
                                 </div>
                             </div>
                             <div class="table-responsive">
 
                                 <table class="table">
                                     <thead class=" text-primary">
-                                        <th>Image</th>
-                                        <th>Title</th>
-                                        <th>Description</th>
-                                        <th>Assembly ID</th>
-                                        <th>Standart of time(h)</th>
+                                        <th>ID</th>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Closed At</th>
+                                        <th>Workers</th>
                                         <th class="text-right">{{ __('Actions') }}</th>
                                     </thead>
                                     <tbody>
-                                    @foreach ($products as $product)
+                                    @foreach ($orders as $order)
                                     <tr>
                                         <td>
-                                            <img src="{{asset('storage/'.$product->getThumb())}}" style="width: 320px; height: 240px" alt="main_image"/>
+                                            {{$order->id}}
                                         </td>
                                         <td>
-                                            <a href="{{ route('product.edit', $product->id) }}">{{$product->title}}</a>
+                                            {{$order->product->title}}
                                         </td>
                                         <td>
-                                            {{$product->description}}
+                                            {{$order->quantity}}
                                         </td>
                                         <td>
-                                            {{$product->assembly_id}}
+                                            {{$order->closed_at}}
                                         </td>
                                         <td>
-                                            {{$product->standart_of_time}}
+                                            @if($order->users)
+                                                @foreach($order->users as $user)
+                                                    {{$user->name.','}}
+                                                @endforeach
+                                            @endif
                                         </td>
+
                                         <td class="td-actions text-right">
 
-                                            <form action="{{ route('product.destroy', $product->id) }}" method="post">
+                                            <form action="{{ route('order.destroy', $order->id) }}" method="post">
                                                 @csrf
                                                 @method('delete')
 
                                                 <a rel="tooltip" class="btn btn-success btn-link"
-                                                   href="{{ route('product.edit', $product->id) }}" data-original-title=""
+                                                   href="{{ route('order.edit', $order->id) }}" data-original-title=""
                                                    title="">
                                                     <i class="material-icons">edit</i>
                                                     <div class="ripple-container"></div>

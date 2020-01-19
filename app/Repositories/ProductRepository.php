@@ -30,7 +30,7 @@ class ProductRepository extends BaseRepository {
     }
 
     /**
-     * Get product list for change parent assembly.
+     * Get product list for set parent assembly.
      *
      * @return array
      */

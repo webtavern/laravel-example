@@ -26,6 +26,14 @@ class UserRepository extends BaseRepository
 
     }
 
+    public function getWorkers() {
+
+        return $this->model->whereHas('roles', function ($query) {
+            $query->where('slug', '=', 'worker');
+        })->get();
+
+    }
+
     public function relationsProcessing($request, $user, $type) {
 
         $roles_id = $request->all()['roles'];

@@ -67,6 +67,31 @@
                 </div>
             </li>
 
+            <li class="nav-item {{ ($activePage == 'order.index' || $activePage == 'order.create' || $activePage == 'order.edit') ? ' active' : '' }}">
+                <a class="nav-link collapsed" data-toggle="collapse" href="#orders" aria-expanded="false">
+                    <i class="material-icons">folder_special</i>
+                    <p>{{ __('Orders') }}
+                        <b class="caret"></b>
+                    </p>
+                </a>
+                <div class="collapse" id="orders">
+                    <ul class="nav">
+                        <li class="nav-item{{ $activePage == 'order.index' ? ' active' : '' }}">
+                            <a class="nav-link" href="{{ route('order.index') }}">
+                                <i class="material-icons">assignment</i>
+                                <span class="sidebar-normal">{{ __('Order list') }} </span>
+                            </a>
+                        </li>
+                        <li class="nav-item{{ $activePage == 'order.create' ? ' active' : '' }}">
+                            <a class="nav-link" href="{{ route('order.create') }}">
+                                <i class="material-icons">add_box</i>
+                                <span class="sidebar-normal"> {{ __('Create order') }} </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
             @role('admin')
             <li class="nav-item {{ ($activePage == 'role.index' || $activePage == 'role.create' || $activePage == 'role.edit') ? ' active' : '' }}">
                 <a class="nav-link collapsed" data-toggle="collapse" href="#roles" aria-expanded="false">

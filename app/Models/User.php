@@ -40,16 +40,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function checkRole($role) {
-
-        $user_roles = $this->roles()->get()->toarray();
-
-        foreach ($user_roles as $user_role) {
-            if(in_array($role, $user_role)) {
-                return true;
-            }
-        }
-
-        return false;
+    public function orders() {
+        return $this->belongsToMany(Order::class,'user_order');
     }
 }
