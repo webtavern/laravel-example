@@ -20,22 +20,32 @@ class UserRepository extends BaseRepository
         $this->model = $user;
     }
 
-    public function getUsersWithRolesAndPermissions() {
-
+    public function getUsersWithRolesAndPermissions()
+    {
         return $this->model->with(['roles', 'permissions'])->get();
-
     }
 
-    public function getWorkers() {
-
+    public function getWorkers()
+    {
         return $this->model->whereHas('roles', function ($query) {
             $query->where('slug', '=', 'worker');
         })->get();
-
     }
 
-    public function relationsProcessing($request, $user, $type) {
+    public function getWorkingUsers()
+    {
+        return $this->model->whereHas('in_works', function ($query) {
+            $query->where('closed_at', '=', null);
+        })->get();
+    }
 
+    public function getAllCount()
+    {
+        return $this->model->count();
+    }
+
+    public function relationsProcessing($request, $user, $type)
+    {
         $roles_id = $request->all()['roles'];
 
         switch ($type) {
@@ -54,7 +64,7 @@ class UserRepository extends BaseRepository
             }
         }
 
-        if(!empty($permissions_id)) {
+        if (!empty($permissions_id)) {
             switch ($type) {
                 case 'store':
                     $user->permissions()->attach($permissions_id);
@@ -64,33 +74,30 @@ class UserRepository extends BaseRepository
                     break;
             }
         }
-
     }
 
-    public function store($request, $user) {
-
+    public function store($request, $user)
+    {
         $created_user = $user->create($request->merge(['password' => Hash::make($request->get('password'))])->all());
 
-        if(array_key_exists('roles', $request->all())) {
+        if (array_key_exists('roles', $request->all())) {
             $this->relationsProcessing($request, $created_user, 'store');
         }
-
     }
 
-    public function update($request, $user) {
-
+    public function update($request, $user)
+    {
         $user->update(
             $request->merge(['password' => Hash::make($request->get('password'))])
                 ->except([$request->get('password') ? '' : 'password']
                 ));
 
-        if(array_key_exists('roles', $request->all())) {
+        if (array_key_exists('roles', $request->all())) {
             $this->relationsProcessing($request, $user, 'update');
         } else {
             $user->roles()->detach();
             $user->permissions()->detach();
         }
-
     }
 
 }

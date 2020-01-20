@@ -5,11 +5,7 @@
 
         Tip 2: you can also add an image using data-image tag
     -->
-    <div class="logo">
-        <a href="https://creative-tim.com/" class="simple-text logo-normal">
-            {{ __('Creative Tim') }}
-        </a>
-    </div>
+
     <div class="sidebar-wrapper">
         <ul class="nav">
             <li class="nav-item{{ $activePage == 'dashboard' ? ' active' : '' }}">
@@ -179,12 +175,7 @@
                     <p>{{ __('RTL Support') }}</p>
                 </a>
             </li>
-            <li class="nav-item active-pro{{ $activePage == 'upgrade' ? ' active' : '' }}">
-                <a class="nav-link" href="{{ route('upgrade') }}">
-                    <i class="material-icons">unarchive</i>
-                    <p>{{ __('Upgrade to PRO') }}</p>
-                </a>
-            </li>
+
 
             @endrole
         </ul>

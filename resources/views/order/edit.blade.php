@@ -55,7 +55,7 @@
 
                                                 @foreach($products as $product)
 
-                                                    <option value="{{ $product->id }}" @if($order->product_id) selected @endif> {{ $product->title}} </option>
+                                                    <option value="{{ $product->id }}" @if($order->product_id == $product->id) selected @endif> {{ $product->title}} </option>
 
                                                 @endforeach
                                             </select>
@@ -99,13 +99,17 @@
                                     <label class="col-sm-2 col-form-label">{{ __('Closed') }}</label>
                                     <div class="col-sm-7">
                                         <div class="form-group{{ $errors->has('closed') ? ' has-danger' : '' }}">
-                                            @foreach($workers as $worker)
-                                                <div>
-                                                    <input class="{{ $errors->has('closed') ? ' is-invalid' : '' }}" name="closed" value="1" type="checkbox" {{($order->closed_at) ? 'checked' : ''}}/><p style="display: inline">Closed</p>
-                                                </div>
-                                            @endforeach
+
+                                            <div>
+                                                <input class="{{ $errors->has('closed') ? ' is-invalid' : '' }}"
+                                                       name="closed" value="1"
+                                                       type="checkbox" {{($order->closed_at) ? 'checked' : ''}}/>
+                                                <p style="display: inline">Closed</p>
+                                            </div>
+
                                             @if ($errors->has('closed'))
-                                                <span id="name-error" class="error text-danger">{{ $errors->first('closed') }}</span>
+                                                <span id="name-error"
+                                                      class="error text-danger">{{ $errors->first('closed') }}</span>
                                             @endif
                                         </div>
                                     </div>

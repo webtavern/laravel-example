@@ -43,4 +43,8 @@ class User extends Authenticatable
     public function orders() {
         return $this->belongsToMany(Order::class,'user_order');
     }
+
+    public function in_works() {
+        return $this->hasMany('AttendanceSystem\Models\Inwork');
+    }
 }

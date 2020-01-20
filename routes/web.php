@@ -37,6 +37,7 @@ Route::middleware(['auth', 'check.user.id'])->group(function () {
 	Route::get('profile', ['as' => 'profile.edit', 'uses' => 'ProfileController@edit']);
 	Route::put('profile', ['as' => 'profile.update', 'uses' => 'ProfileController@update']);
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'ProfileController@password']);
+	Route::post('task/handle', ['as' => 'task.handle', 'uses' => 'InworkController@handle']);
 });
 
 Route::middleware(['role:admin'])->group(function () {

@@ -2,16 +2,26 @@
 
 namespace AttendanceSystem\Http\Controllers;
 
+use AttendanceSystem\Models\User;
+use AttendanceSystem\Models\Order;
+use AttendanceSystem\Repositories\OrderRepository;
+use AttendanceSystem\Repositories\UserRepository;
+
 class HomeController extends Controller
 {
+    private $userRepository;
+    private $orderRepository;
     /**
      * Create a new controller instance.
-     *
+     * @param UserRepository $userRepository
+     * @param OrderRepository $orderRepository
      * @return void
      */
-    public function __construct()
+    public function __construct(UserRepository $userRepository, OrderRepository $orderRepository)
     {
         $this->middleware('auth');
+        $this->userRepository = $userRepository;
+        $this->orderRepository = $orderRepository;
     }
 
     /**
@@ -21,6 +31,27 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('dashboard');
+        $users_count = $this->userRepository->getAllCount();
+        $working_users = $this->userRepository->getWorkingUsers();
+        $user_tasks = $this->orderRepository->getUsersTasks();
+        $working_tasks = $this->orderRepository->getWorkingTasks();
+
+
+//        dd($working_tasks);
+
+        return view('dashboard', [
+            'users_count' => $users_count,
+            'user_tasks' => $user_tasks,
+            'working_users' => $working_users,
+            'working_tasks' => $working_tasks
+        ]);
+    }
+
+    public function refreshUsers() {
+
+    }
+
+    public function refreshOrders() {
+
     }
 }

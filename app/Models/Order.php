@@ -24,6 +24,10 @@ class Order extends Model
         return $this->belongsTo('AttendanceSystem\Models\Product');
     }
 
+    public function in_works() {
+        return $this->hasMany('AttendanceSystem\Models\Inwork');
+    }
+
     public function hasWorker($id)
     {
         if ($this->users->contains('id', $id)) {
