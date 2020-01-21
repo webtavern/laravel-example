@@ -36,9 +36,6 @@ class HomeController extends Controller
         $user_tasks = $this->orderRepository->getUsersTasks();
         $working_tasks = $this->orderRepository->getWorkingTasks();
 
-
-//        dd($working_tasks);
-
         return view('dashboard', [
             'users_count' => $users_count,
             'user_tasks' => $user_tasks,

@@ -19,9 +19,14 @@ class OrderRepository extends BaseRepository
     public function getUsersTasks()
     {
         return $this->model->where('closed_at', null)
+            ->whereHas('users', function ($query) {
+                $query->where('id', '=', auth()->user()->id);
+            })
+            ->with('users:id')
             ->with(['product:id,title', 'in_works' => function ($query) {
                 $query->where('user_id', '=', auth()->user()->id);
-            }])->get();
+            }])
+           ->get();
     }
 
     public function getWorkingTasks()
