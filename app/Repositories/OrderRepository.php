@@ -22,7 +22,6 @@ class OrderRepository extends BaseRepository
             ->whereHas('users', function ($query) {
                 $query->where('id', '=', auth()->user()->id);
             })
-            ->with('users:id')
             ->with(['product:id,title', 'in_works' => function ($query) {
                 $query->where('user_id', '=', auth()->user()->id);
             }])

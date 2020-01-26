@@ -16,6 +16,7 @@
     <link href="{{ asset('material') }}/css/material-dashboard.css?v=2.1.1" rel="stylesheet" />
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link href="{{ asset('material') }}/demo/demo.css" rel="stylesheet" />
+        <script type="text/javascript" src="{{asset('js/app.js')}}"></script>
     </head>
     <body class="{{ $class ?? '' }}">
         @auth()
@@ -72,12 +73,6 @@
               <li class="button-container">
                 <a href="https://www.creative-tim.com/product/material-dashboard-laravel" target="_blank" class="btn btn-primary btn-block">Free Download</a>
               </li>
-              <!-- <li class="header-title">Want more components?</li>
-                  <li class="button-container">
-                      <a href="https://www.creative-tim.com/product/material-dashboard-pro" target="_blank" class="btn btn-warning btn-block">
-                        Get the pro version
-                      </a>
-                  </li> -->
               <li class="button-container">
                 <a href="https://material-dashboard-laravel.creative-tim.com/docs/getting-started/laravel-setup.html" target="_blank" class="btn btn-default btn-block">
                   View Documentation
@@ -96,6 +91,7 @@
             </ul>
           </div>
         </div>
+
         <!--   Core JS Files   -->
         <script src="{{ asset('material') }}/js/core/jquery.min.js"></script>
         <script src="{{ asset('material') }}/js/core/popper.min.js"></script>
@@ -140,10 +136,101 @@
         <!-- Material Dashboard DEMO methods, don't include it in your project! -->
         <script src="{{ asset('material') }}/demo/demo.js"></script>
         <script src="{{ asset('material') }}/js/settings.js"></script>
+
+        @if(auth()->user())
         <script>
 
-                $('.sidebar-wrapper li.nav-item.active').children('a.nav-link').removeClass('collapsed').attr('aria-expanded', 'true');
-                $('.sidebar-wrapper li.nav-item.active').children('div.collapse').addClass('show');
+            //subscribe online channel
+
+            let users_online = [];
+
+            Echo.join('online').here((users) => {
+                // console.log('Participant on channel:');
+                // console.log(users);
+                for (let key in users) {
+                   users_online.push(users[key]);
+                }
+            }).joining((user) => {
+                // console.log('Join on channel:');
+                // console.log(user);
+
+                users_online.push(user);
+
+            }).leaving((user) => {
+                // console.log('Leave channel:');
+                // console.log(user);
+
+                let index = users_online.indexOf(user);
+                if (index > -1) {
+                    users_online.splice(index, 1);
+                }
+            });
+
+            // subscribe private channel if user log in
+
+            let user_id = {{auth()->user()->id}} + '';
+            let channel = 'direct.' + user_id;
+
+            Echo.private(channel).listen(".AttendanceSystem\\Events\\NewMessage", (response) => {
+
+                // console.log(response);
+
+                if (response.id == user_id) {
+                    $('#message-container').append('<div class="m-container"><div class="message-page__message-chat message-page__message-chat--message-to">' +
+                        '<div class="message-page__message-chat--message">' + response.message + '</div>' +
+                        '<div class="message-page__message-chat--message-info"></div>' +
+                        '</div></div>');
+                } else {
+                    $('#message-container').append('<div class="m-container"><div class="message-page__message-chat message-page__message-chat--message-from">' +
+                        '<div class="message-page__message-chat--message">' + response.message + '</div>' +
+                        '<div class="message-page__message-chat--message-info"></div>' +
+                        '</div></div>')
+                }
+
+                function test() {
+
+
+                    if (users_online.indexOf(parseInt(response.id)) !== -1) {
+
+                        $.ajaxSetup({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            }
+                        });
+
+                        $.ajax({
+                            url: '{{ route('message.status') }}',
+                            type: "post",
+                            data: {
+                                 id: response.message_id,
+                            },
+                            error: function (e) {
+                                console.log(e);
+                            }
+                        });
+                    }
+                }
+
+                setTimeout(test, 1000);
+            });
+
+        </script>
+        @endif
+        <script>
+            // menu collapse fix
+            $('.sidebar-wrapper li.nav-item.active').children('a.nav-link').removeClass('collapsed').attr('aria-expanded', 'true');
+            $('.sidebar-wrapper li.nav-item.active').children('div.collapse').addClass('show');
+
+
+            //test public channel
+            Echo.channel('chat').listen(".AttendanceSystem\\Events\\Test", (e) => {
+                console.log(e);
+            });
+
+            // Pusher.logToConsole = true;
+            // Echo.private('direct').listen('.pusher:subscription_error', (status) => {
+            //     console.log(status);
+            // })
 
         </script>
         @stack('js')

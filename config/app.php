@@ -67,7 +67,8 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+//    'timezone' => 'UTC',
+        'timezone' => 'Europe/Moscow',
 
     /*
     |--------------------------------------------------------------------------
@@ -172,7 +173,7 @@ return [
          */
         AttendanceSystem\Providers\AppServiceProvider::class,
         AttendanceSystem\Providers\AuthServiceProvider::class,
-        // AttendanceSystem\Providers\BroadcastServiceProvider::class,
+        AttendanceSystem\Providers\BroadcastServiceProvider::class,
         AttendanceSystem\Providers\EventServiceProvider::class,
         AttendanceSystem\Providers\RouteServiceProvider::class,
         AttendanceSystem\Providers\PermissionServiceProvider::class,

@@ -11,7 +11,6 @@
 |
 */
 
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -28,9 +27,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-//Auth::routes();
-
-//Route::get('/home', 'HomeController@index')->name('home');
+Route::post('message/history', ['as' => 'message.history', 'uses' => 'MessageController@getHistory']);
+Route::get('message/send', ['as' => 'message.send', 'uses' => 'MessageController@send']);
+Route::post('message/status', ['as' => 'message.status', 'uses' => 'MessageController@switchStatus']);
 
 Route::middleware(['auth', 'check.user.id'])->group(function () {
 	Route::resource('user', 'UserController', ['except' => ['show']]);
@@ -38,6 +37,7 @@ Route::middleware(['auth', 'check.user.id'])->group(function () {
 	Route::put('profile', ['as' => 'profile.update', 'uses' => 'ProfileController@update']);
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'ProfileController@password']);
 	Route::post('task/handle', ['as' => 'task.handle', 'uses' => 'InworkController@handle']);
+
 });
 
 Route::middleware(['role:admin'])->group(function () {

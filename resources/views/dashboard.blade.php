@@ -143,6 +143,11 @@
                       <a class="nav-link" href="#messages" data-toggle="tab">
                         <i class="material-icons">message</i> Messages
                         <div class="ripple-container"></div>
+                          @if($last_messages->where('status', 0)->count())
+                              <span id="unread-messages" class="notification" style="position: absolute;top: 0;border: 1px solid #FFF;right: -5px;
+                              font-size: 9px;background: #f44336;color: #FFFFFF;min-width: 20px;padding: 0px 5px;height: 20px;border-radius: 10px;
+                              text-align: center;line-height: 19px;vertical-align: middle;display: block;">{{$last_messages->where('status', 0)->count()}}</span>
+                          @endif
                       </a>
                     </li>
                   </ul>
@@ -178,49 +183,15 @@
                 <div class="tab-pane" id="messages">
                   <table class="table">
                     <tbody>
-                      <tr>
-                        <td>
-                          <div class="form-check">
-                            <label class="form-check-label">
-                              <input class="form-check-input" type="checkbox" value="" checked>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
-                            </label>
-                          </div>
-                        </td>
-                        <td>Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit
-                        </td>
-                        <td class="td-actions text-right">
-                          <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-                            <i class="material-icons">edit</i>
-                          </button>
-                          <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-                            <i class="material-icons">close</i>
-                          </button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <div class="form-check">
-                            <label class="form-check-label">
-                              <input class="form-check-input" type="checkbox" value="">
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
-                            </label>
-                          </div>
-                        </td>
-                        <td>Sign contract for "What are conference organizers afraid of?"</td>
-                        <td class="td-actions text-right">
-                          <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-                            <i class="material-icons">edit</i>
-                          </button>
-                          <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-                            <i class="material-icons">close</i>
-                          </button>
-                        </td>
-                      </tr>
+
+                    @foreach($last_messages as $last_message)
+                        <tr class="click-direct" data-from="{{$last_message->from_id}}" data-to="{{auth()->user()->id}}">
+                            <td><b>{{$users->where('id', $last_message->from_id)->pluck('name')[0]}}</b></td>
+                            <td><b>{{$last_message->body}}</b></td>
+                            <td>{{$last_message->created_at}}</td>
+                        </tr>
+                    @endforeach
+
                     </tbody>
                   </table>
                 </div>
@@ -231,6 +202,9 @@
       </div> <!-- user task row -->
     </div>
   </div>
+    @include('direct')
+
+
 @endsection
 
 @push('js')
@@ -287,11 +261,82 @@
 
       }
 
-
       $(document).ready(function () {
 
+          function sd() {
+              let el = $('#message-container');
+
+              let el_h = el.height();
+
+              $('.sidebar-wrap').scrollTop(el_h);
+          }
+
+          $('.click-direct').click(function () {
+
+              let from_id = $(this).attr('data-from');
+              let to_id = $(this).attr('data-to');
 
 
+
+              $.ajaxSetup({
+                  headers: {
+                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                  }
+              });
+
+              $.ajax({
+                  url: '{{ route('message.history') }}',
+                  type: "post",
+                  data: {
+                      from_id: from_id,
+                      to_id: to_id,
+                  },
+                  success: function (response) {
+                      $('#message-container').html(response);
+                      setTimeout(sd, 100);
+                      if($("#send-form input[name=to_id]").length) {
+                          $("#send-form input[name=to_id]").attr('value', from_id);
+                      } else {
+                          $('#send-form').append('<input type="hidden" name="to_id" value="'+from_id+'">');
+                      }
+                      $('.direct-messages').show();
+                  },
+                  error: function (response) {
+                      console.log(response);
+                  }
+              });
+
+          });
+
+          $('#send').click(function() {
+
+                let message = $('textarea[name=message]').val();
+                let to_id = $('input[name=to_id]').val();
+
+              $.ajaxSetup({
+                  headers: {
+                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                  }
+              });
+
+              $.ajax({
+                  url: '{{ route('message.send') }}',
+                  type: "get",
+                  data: {
+                      message: message,
+                      to_id: to_id,
+                  },
+                  success: function () {
+                      $('textarea[name=message]').val('');
+                      setTimeout(sd, 100);
+                  },
+                  error: function (response) {
+                      console.log(response);
+                  }
+              });
+
+          })
       });
   </script>
 @endpush
+
