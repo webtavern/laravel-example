@@ -55,7 +55,7 @@
                                     @foreach ($products as $product)
                                     <tr>
                                         <td>
-                                            <img src="{{asset('storage/'.$product->getThumb())}}" style="width: 320px; height: 240px" alt="main_image"/>
+                                            <img src="{{asset($product->getThumb())}}" style="width: 320px; height: 240px" alt="main_image"/>
                                         </td>
                                         <td>
                                             <a href="{{ route('product.edit', $product->id) }}">{{$product->title}}</a>

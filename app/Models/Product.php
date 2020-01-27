@@ -39,10 +39,10 @@ class Product extends Model
 
         if($obj) {
             $name = $obj->name;
-            return 'uploads/thumbs/'.$name;
+            return '/storage/uploads/thumbs/'.$name;
         }
 
-        return 'images/no_image.jpg';
+        return 'img/no_image.jpg';
     }
 
 
