@@ -2,7 +2,9 @@
 
 namespace AttendanceSystem\Providers;
 
+use AttendanceSystem\Models\Message;
 use AttendanceSystem\Models\Order;
+use AttendanceSystem\Observers\MessageObserver;
 use AttendanceSystem\Observers\OrderObserver;
 use Illuminate\Support\ServiceProvider;
 
@@ -26,5 +28,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Order::observe(OrderObserver::class);
+        Message::observe(MessageObserver::class);
     }
 }

@@ -14,50 +14,9 @@ class OrderObserver
      */
     public function created(Order $order)
     {
-        dd($order);
+//        dd($order);
+        // notification event
     }
 
-    /**
-     * Handle the order "updated" event.
-     *
-     * @param  \AttendanceSystem\Models\Order  $order
-     * @return void
-     */
-    public function updated(Order $order)
-    {
-        //
-    }
 
-    /**
-     * Handle the order "deleted" event.
-     *
-     * @param  \AttendanceSystem\Models\Order  $order
-     * @return void
-     */
-    public function deleted(Order $order)
-    {
-        //
-    }
-
-    /**
-     * Handle the order "restored" event.
-     *
-     * @param  \AttendanceSystem\Models\Order  $order
-     * @return void
-     */
-    public function restored(Order $order)
-    {
-        //
-    }
-
-    /**
-     * Handle the order "force deleted" event.
-     *
-     * @param  \AttendanceSystem\Models\Order  $order
-     * @return void
-     */
-    public function forceDeleted(Order $order)
-    {
-        //
-    }
 }

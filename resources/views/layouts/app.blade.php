@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-    <meta charset="utf-8" />
+<head>
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ __('Attendance System') }}</title>
     <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('material') }}/img/apple-icon.png">
     <link rel="icon" type="image/png" href="{{ asset('material') }}/img/favicon.png">
-    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
+          name='viewport'/>
     <!--     Fonts and icons     -->
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+    <link rel="stylesheet" type="text/css"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
     <!-- CSS Files -->
-    <link href="{{ asset('material') }}/css/material-dashboard.css?v=2.1.1" rel="stylesheet" />
+    <link href="{{ asset('material') }}/css/material-dashboard.css?v=2.1.1" rel="stylesheet"/>
     <!-- CSS Just for demo purpose, don't include it in your project -->
-    <link href="{{ asset('material') }}/demo/demo.css" rel="stylesheet" />
-        <script type="text/javascript" src="{{asset('js/app.js')}}"></script>
-    </head>
+    <link href="{{ asset('material') }}/demo/demo.css" rel="stylesheet"/>
+    <link href="{{asset('css/style.css')}}" rel="stylesheet"/>
+    <script type="text/javascript" src="{{asset('js/app.js')}}"></script>
+</head>
     <body class="{{ $class ?? '' }}">
         @auth()
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -137,85 +140,7 @@
         <script src="{{ asset('material') }}/demo/demo.js"></script>
         <script src="{{ asset('material') }}/js/settings.js"></script>
 
-        @if(auth()->user())
-        <script>
 
-            //subscribe online channel
-
-            let users_online = [];
-
-            Echo.join('online').here((users) => {
-                // console.log('Participant on channel:');
-                // console.log(users);
-                for (let key in users) {
-                   users_online.push(users[key]);
-                }
-            }).joining((user) => {
-                // console.log('Join on channel:');
-                // console.log(user);
-
-                users_online.push(user);
-
-            }).leaving((user) => {
-                // console.log('Leave channel:');
-                // console.log(user);
-
-                let index = users_online.indexOf(user);
-                if (index > -1) {
-                    users_online.splice(index, 1);
-                }
-            });
-
-            // subscribe private channel if user log in
-
-            let user_id = {{auth()->user()->id}} + '';
-            let channel = 'direct.' + user_id;
-
-            Echo.private(channel).listen(".AttendanceSystem\\Events\\NewMessage", (response) => {
-
-                // console.log(response);
-
-                if (response.id == user_id) {
-                    $('#message-container').append('<div class="m-container"><div class="message-page__message-chat message-page__message-chat--message-to">' +
-                        '<div class="message-page__message-chat--message">' + response.message + '</div>' +
-                        '<div class="message-page__message-chat--message-info"></div>' +
-                        '</div></div>');
-                } else {
-                    $('#message-container').append('<div class="m-container"><div class="message-page__message-chat message-page__message-chat--message-from">' +
-                        '<div class="message-page__message-chat--message">' + response.message + '</div>' +
-                        '<div class="message-page__message-chat--message-info"></div>' +
-                        '</div></div>')
-                }
-
-                function test() {
-
-
-                    if (users_online.indexOf(parseInt(response.id)) !== -1) {
-
-                        $.ajaxSetup({
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            }
-                        });
-
-                        $.ajax({
-                            url: '{{ route('message.status') }}',
-                            type: "post",
-                            data: {
-                                 id: response.message_id,
-                            },
-                            error: function (e) {
-                                console.log(e);
-                            }
-                        });
-                    }
-                }
-
-                setTimeout(test, 1000);
-            });
-
-        </script>
-        @endif
         <script>
             // menu collapse fix
             $('.sidebar-wrapper li.nav-item.active').children('a.nav-link').removeClass('collapsed').attr('aria-expanded', 'true');

@@ -29,7 +29,7 @@ Route::get('/', function () {
 
 Route::post('message/history', ['as' => 'message.history', 'uses' => 'MessageController@getHistory']);
 Route::get('message/send', ['as' => 'message.send', 'uses' => 'MessageController@send']);
-Route::post('message/status', ['as' => 'message.status', 'uses' => 'MessageController@switchStatus']);
+Route::post('message/status', ['as' => 'message.status', 'uses' => 'MessageController@updateStatus']);
 
 Route::middleware(['auth', 'check.user.id'])->group(function () {
 	Route::resource('user', 'UserController', ['except' => ['show']]);

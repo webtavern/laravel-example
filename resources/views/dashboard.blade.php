@@ -185,7 +185,7 @@
                     <tbody>
 
                     @foreach($last_messages as $last_message)
-                        <tr class="click-direct" data-from="{{$last_message->from_id}}" data-to="{{auth()->user()->id}}">
+                        <tr class="click-direct" data-from="{{$last_message->from_id}}" data-to="{{auth()->user()->id}}" style="cursor: pointer">
                             <td><b>{{$users->where('id', $last_message->from_id)->pluck('name')[0]}}</b></td>
                             <td><b>{{$last_message->body}}</b></td>
                             <td>{{$last_message->created_at}}</td>
@@ -206,137 +206,218 @@
 
 
 @endsection
+@if(auth()->user())
+    @push('js')
+        <script>
 
-@push('js')
-  <script>
-      function showNotification(from, align, handle_type, task_id) {
+            let users_online = [];
 
-          $.notify({
-              icon: "add_alert",
-              message: "Task <b>ID="+task_id+"</b> "+handle_type+"."
+            function showNotification(from, align, handle_type, task_id) {
 
-          }, {
-              type: 'info',
-              timer: 3000,
-              placement: {
-                  from: from,
-                  align: align
-              }
-          });
-      }
+                $.notify({
+                    icon: "add_alert",
+                    message: "Task <b>ID=" + task_id + "</b> " + handle_type + "."
 
-      function handle(task_id) {
+                }, {
+                    type: 'info',
+                    timer: 3000,
+                    placement: {
+                        from: from,
+                        align: align
+                    }
+                });
+            }
 
-          console.log($(this));
-          $.ajaxSetup({
-              headers: {
-                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-              }
-          });
-          $.ajax({
-              url: '{{ route('task.handle') }}',
-              type: "post",
-              data: {
-                  order_id: task_id,
-              },
-              success: function (response) {
-                  switch (response) {
-                      case 'opened':
-                          $('[data-id='+task_id+']').removeClass('btn-success');
-                          $('[data-id='+task_id+']').addClass('btn-danger').text('Stop task');
-                          showNotification('top', 'right', 'started', task_id);
-                          break;
-                      case 'closed':
-                          $('[data-id='+task_id+']').removeClass('btn-danger');
-                          $('[data-id='+task_id+']').addClass('btn-success').text('Start task');
-                          showNotification('top', 'right', 'stopped', task_id);
-                          break;
-                  }
+            function handle(task_id) {
 
-              },
-              error: function(response) {
-                  console.log(response);
-              }
-          });
+                console.log($(this));
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    url: '{{ route('task.handle') }}',
+                    type: "post",
+                    data: {
+                        order_id: task_id,
+                    },
+                    success: function (response) {
+                        switch (response) {
+                            case 'opened':
+                                $('[data-id=' + task_id + ']').removeClass('btn-success');
+                                $('[data-id=' + task_id + ']').addClass('btn-danger').text('Stop task');
+                                showNotification('top', 'right', 'started', task_id);
+                                break;
+                            case 'closed':
+                                $('[data-id=' + task_id + ']').removeClass('btn-danger');
+                                $('[data-id=' + task_id + ']').addClass('btn-success').text('Start task');
+                                showNotification('top', 'right', 'stopped', task_id);
+                                break;
+                        }
 
-      }
+                    },
+                    error: function (response) {
+                        console.log(response);
+                    }
+                });
 
-      $(document).ready(function () {
+            }
 
-          function sd() {
-              let el = $('#message-container');
+            $(document).ready(function () {
 
-              let el_h = el.height();
+                function sd() {
+                    let el = $('#message-container');
 
-              $('.sidebar-wrap').scrollTop(el_h);
-          }
+                    let el_h = el.height();
 
-          $('.click-direct').click(function () {
+                    $('.sidebar-wrap').scrollTop(el_h);
+                }
 
-              let from_id = $(this).attr('data-from');
-              let to_id = $(this).attr('data-to');
+                $('.click-direct').click(function () {
+
+                    let from_id = $(this).attr('data-from');
+                    let to_id = $(this).attr('data-to');
+
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+
+                    $.ajax({
+                        url: '{{ route('message.history') }}',
+                        type: "post",
+                        data: {
+                            from_id: from_id,
+                            to_id: to_id,
+                        },
+                        success: function (response) {
+                            $('#message-container').html(response);
+                            setTimeout(sd, 100);
+                            if ($("#send-form input[name=to_id]").length) {
+                                $("#send-form input[name=to_id]").attr('value', from_id);
+                            } else {
+                                $('#send-form').append('<input type="hidden" name="to_id" value="' + from_id + '">');
+                            }
+                            $('.direct-messages').show();
+
+                            //subscribe online channel
+
+                            Echo.join('online').here((users) => {
+                                // console.log('Participant on channel:');
+                                // console.log(users);
+                                for (let key in users) {
+                                    users_online.push(users[key]);
+                                }
+                            }).joining((user) => {
+                                // console.log('Join on channel:');
+                                // console.log(user);
+
+                                users_online.push(user);
+
+                            }).leaving((user) => {
+                                // console.log('Leave channel:');
+                                // console.log(user);
+
+                                let index = users_online.indexOf(user);
+                                if (index > -1) {
+                                    users_online.splice(index, 1);
+                                }
+                            });
 
 
+                        },
+                        error: function (response) {
+                            console.log(response);
+                        }
+                    });
 
-              $.ajaxSetup({
-                  headers: {
-                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                  }
-              });
+                });
 
-              $.ajax({
-                  url: '{{ route('message.history') }}',
-                  type: "post",
-                  data: {
-                      from_id: from_id,
-                      to_id: to_id,
-                  },
-                  success: function (response) {
-                      $('#message-container').html(response);
-                      setTimeout(sd, 100);
-                      if($("#send-form input[name=to_id]").length) {
-                          $("#send-form input[name=to_id]").attr('value', from_id);
-                      } else {
-                          $('#send-form').append('<input type="hidden" name="to_id" value="'+from_id+'">');
-                      }
-                      $('.direct-messages').show();
-                  },
-                  error: function (response) {
-                      console.log(response);
-                  }
-              });
+                $('.sidebar-header-col-right').click(function () {
+                    $('.direct-messages').hide();
+                    Echo.leave('online');
+                });
 
-          });
+                $('#send').click(function () {
 
-          $('#send').click(function() {
+                    let message = $('textarea[name=message]').val();
+                    let to_id = $('input[name=to_id]').val();
 
-                let message = $('textarea[name=message]').val();
-                let to_id = $('input[name=to_id]').val();
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
 
-              $.ajaxSetup({
-                  headers: {
-                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                  }
-              });
+                    $.ajax({
+                        url: '{{ route('message.send') }}',
+                        type: "get",
+                        data: {
+                            message: message,
+                            to_id: to_id,
+                        },
+                        success: function () {
+                            $('textarea[name=message]').val('');
+                            setTimeout(sd, 100);
+                        },
+                        error: function (response) {
+                            console.log(response);
+                        }
+                    });
 
-              $.ajax({
-                  url: '{{ route('message.send') }}',
-                  type: "get",
-                  data: {
-                      message: message,
-                      to_id: to_id,
-                  },
-                  success: function () {
-                      $('textarea[name=message]').val('');
-                      setTimeout(sd, 100);
-                  },
-                  error: function (response) {
-                      console.log(response);
-                  }
-              });
+                })
+            });
 
-          })
-      });
-  </script>
-@endpush
+            // subscribe private channel if user log in
 
+            let user_id = {{auth()->user()->id}} +'';
+            let channel = 'direct.' + user_id;
+
+            Echo.private(channel).listen(".AttendanceSystem\\Events\\NewMessage", (response) => {
+
+                // console.log(response);
+
+                if (response.id == user_id) {
+                    $('#message-container').append('<div class="m-container"><div class="message-page-message-chat message-page-message-chat--message-to">' +
+                        '<div class="message-page-message-chat--message">' + response.message + '</div>' +
+                        '<div class="message-page-message-chat--message-info"></div>' +
+                        '</div></div>');
+                } else {
+                    $('#message-container').append('<div class="m-container"><div class="message-page-message-chat message-page-message-chat--message-from">' +
+                        '<div class="message-page-message-chat--message">' + response.message + '</div>' +
+                        '<div class="message-page-message-chat--message-info"></div>' +
+                        '</div></div>')
+                }
+
+                function updateStatus() {
+
+                    // console.log(users_online.indexOf(parseInt(response.id)));
+
+                    if (users_online.indexOf(parseInt(response.id)) != -1) {
+
+                        $.ajaxSetup({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            }
+                        });
+
+                        $.ajax({
+                            url: '{{ route('message.status') }}',
+                            type: "post",
+                            data: {
+                                id: response.message_id,
+                            },
+                            error: function (e) {
+                                console.log(e);
+                            }
+                        });
+                    }
+                }
+
+                setTimeout(updateStatus, 1500);
+            });
+        </script>
+    @endpush
+@endif
