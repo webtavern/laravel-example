@@ -17,7 +17,7 @@ class CreatePermissionTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('slug');
-            $table->json('routes')->nullable();
+            $table->text('routes')->nullable();
             $table->timestamps();
         });
     }
