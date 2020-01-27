@@ -10,15 +10,15 @@
               <div class="card-icon">
                 <i class="material-icons">content_copy</i>
               </div>
-              <p class="card-category">Used Space</p>
-              <h3 class="card-title">49/50
-                <small>GB</small>
+              <p class="card-category">Orders completed</p>
+              <h3 class="card-title">1/999
+                <small></small>
               </h3>
             </div>
             <div class="card-footer">
               <div class="stats">
                 <i class="material-icons text-danger">warning</i>
-                <a href="#pablo">Get More Space...</a>
+                <a href="{{route('order.index')}}">More information...</a>
               </div>
             </div>
           </div>
@@ -45,12 +45,13 @@
               <div class="card-icon">
                 <i class="material-icons">info_outline</i>
               </div>
-              <p class="card-category">Fixed Issues</p>
+              <p class="card-category">Overdue tasks</p>
               <h3 class="card-title">75</h3>
             </div>
             <div class="card-footer">
               <div class="stats">
-                <i class="material-icons">local_offer</i> Tracked from Github
+                <i class="material-icons">local_offer</i>
+                  <a href="{{route('order.create')}}">Create order</a>
               </div>
             </div>
           </div>
